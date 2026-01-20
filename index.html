@@ -33,6 +33,58 @@
             overflow-x: hidden;
         }
         
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Product Image Placeholders */
+        .product-image-placeholder {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%);
+            background-size: 40px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 1.2rem;
+        }
+        
+        .product-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+        
         /* Royal Header Styles */
         .royal-header {
             background: linear-gradient(135deg, var(--primary) 0%, #283593 100%);
@@ -208,10 +260,7 @@
         
         /* Hero Banner */
         .royal-hero {
-            background: linear-gradient(rgba(13,27,42,0.9), rgba(26,35,126,0.9)),
-                        url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(rgba(13,27,42,0.9), rgba(26,35,126,0.9));
             color: white;
             padding: 120px 40px;
             text-align: center;
@@ -400,6 +449,7 @@
             height: 280px;
             overflow: hidden;
             position: relative;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
         }
         
         .product-image {
@@ -500,6 +550,20 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+        }
+        
+        /* Product Icons for Categories */
+        .product-icon-small {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
         }
         
         /* Royal Features */
@@ -843,6 +907,11 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+    </div>
+    
     <!-- Royal Header -->
     <div class="royal-header">
         <div class="container">
@@ -1080,4 +1149,351 @@
                         <h3>Contact Info</h3>
                         <ul class="footer-links">
                             <li><a href="tel:+255673995536"><i class="fas fa-phone"></i> +255 673 995 536</a></li>
-                            <li><a href="https://wa.me/255673995536"><i class="
+                            <li><a href="https://wa.me/255673995536"><i class="fab fa-whatsapp"></i> WhatsApp: +255 673 995 536</a></li>
+                            <li><a href="https://www.instagram.com/mr_cyber0404"><i class="fab fa-instagram"></i> Instagram: @mr_cyber0404</a></li>
+                            <li><a href="mailto:skroyal.company@gmail.com"><i class="fas fa-envelope"></i> skroyal.company@gmail.com</a></li>
+                            <li><a href="#"><i class="fas fa-map-marker-alt"></i> Dar es Salaam, Tanzania</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2024 SK ROYAL COMPANY. All rights reserved.</p>
+                    <p>Premium Electronics & Fashion Distributor | Official Reseller</p>
+                    <div class="owner-credits">
+                        <div class="owner-name">Proprietor: Bernard Kimaro</div>
+                        <p>Building trust through quality products and royal customer service since 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/255673995536?text=Hello%20SK%20ROYAL%20COMPANY!%20I'm%20interested%20in%20your%20products.%20Can%20you%20help%20me?" 
+       class="whatsapp-royal" target="_blank" id="whatsappFloat">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Product Modal -->
+    <div class="royal-modal" id="productModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Complete Product Database with 250+ Products
+        const productsDatabase = {
+            all: [],
+            smartphones: [
+                { id: 1, name: "iPhone 15 Pro Max 256GB", price: "TZS 3,850,000", category: "Smartphones", description: "Latest iPhone with A17 Pro chip, 48MP main camera, Dynamic Island, Titanium design", badge: "New", icon: "fas fa-mobile-alt" },
+                { id: 2, name: "Samsung Galaxy S24 Ultra", price: "TZS 3,200,000", category: "Smartphones", description: "S Pen included, 200MP camera, Snapdragon 8 Gen 3, AI features", badge: "Hot", icon: "fas fa-mobile-alt" },
+                { id: 3, name: "Google Pixel 8 Pro", price: "TZS 2,950,000", category: "Smartphones", description: "Google AI features, Tensor G3 chip, 50MP camera, Magic Editor", badge: "Sale", icon: "fas fa-mobile-alt" },
+                { id: 4, name: "OnePlus 12 5G", price: "TZS 2,750,000", category: "Smartphones", description: "Hasselblad camera, 100W charging, 6.82\" LTPO display", badge: "New", icon: "fas fa-mobile-alt" },
+                { id: 5, name: "Xiaomi 13 Pro", price: "TZS 2,500,000", category: "Smartphones", description: "Leica camera, 120W HyperCharge, Snapdragon 8 Gen 2", badge: "Popular", icon: "fas fa-mobile-alt" },
+                { id: 6, name: "iPhone 14 Plus 128GB", price: "TZS 2,800,000", category: "Smartphones", description: "A15 Bionic chip, All-day battery life, 6.7\" Super Retina XDR", badge: "Sale", icon: "fas fa-mobile-alt" },
+                { id: 7, name: "Samsung Galaxy Z Flip5", price: "TZS 3,500,000", category: "Smartphones", description: "Foldable design, Flex Window, Snapdragon 8 Gen 2", badge: "New", icon: "fas fa-mobile-alt" },
+                { id: 8, name: "Realme GT 5 Pro", price: "TZS 2,300,000", category: "Smartphones", description: "144Hz AMOLED, 50MP Sony IMX890, 240W charging", badge: "Popular", icon: "fas fa-mobile-alt" },
+                { id: 9, name: "Tecno Phantom V Fold", price: "TZS 2,900,000", category: "Smartphones", description: "Africa's first foldable, 7.85\" main display, MediaTek Dimensity 9000+", badge: "New", icon: "fas fa-mobile-alt" },
+                { id: 10, name: "Infinix Note 30 Pro", price: "TZS 850,000", category: "Smartphones", description: "68W fast charging, 108MP camera, 120Hz AMOLED display", badge: "Value", icon: "fas fa-mobile-alt" },
+                { id: 11, name: "iPhone 13 128GB", price: "TZS 2,300,000", category: "Smartphones", description: "A15 Bionic, Cinematic mode, 5G capable, 12MP dual camera", badge: "Best Seller", icon: "fas fa-mobile-alt" },
+                { id: 12, name: "Samsung Galaxy A54 5G", price: "TZS 1,200,000", category: "Smartphones", description: "120Hz Super AMOLED, IP67 water resistance, 50MP camera", badge: "Popular", icon: "fas fa-mobile-alt" },
+                { id: 13, name: "Redmi Note 12 Pro+", price: "TZS 950,000", category: "Smartphones", description: "200MP camera, 120W HyperCharge, 120Hz AMOLED", badge: "Sale", icon: "fas fa-mobile-alt" },
+                { id: 14, name: "Oppo Find X6 Pro", price: "TZS 2,850,000", category: "Smartphones", description: "Hasselblad camera, MariSilicon X NPU, 2K display", badge: "New", icon: "fas fa-mobile-alt" },
+                { id: 15, name: "Vivo X90 Pro", price: "TZS 2,650,000", category: "Smartphones", description: "Zeiss camera, MediaTek Dimensity 9200+, 120W charging", badge: "Premium", icon: "fas fa-mobile-alt" },
+                { id: 16, name: "iPhone 12 64GB", price: "TZS 1,950,000", category: "Smartphones", description: "A14 Bionic, Super Retina XDR display, Ceramic Shield", badge: "Budget", icon: "fas fa-mobile-alt" },
+                { id: 17, name: "Samsung Galaxy S23", price: "TZS 2,450,000", category: "Smartphones", description: "Snapdragon 8 Gen 2, 50MP camera, 8K video recording", badge: "Popular", icon: "fas fa-mobile-alt" },
+                { id: 18, name: "Google Pixel 7a", price: "TZS 1,850,000", category: "Smartphones", description: "Tensor G2, 64MP camera, 90Hz display, Titan security", badge: "Value", icon: "fas fa-mobile-alt" },
+                { id: 19, name: "Nothing Phone (2)", price: "TZS 2,150,000", category: "Smartphones", description: "Glyph interface, Snapdragon 8+ Gen 1, 50MP dual camera", badge: "Trending", icon: "fas fa-mobile-alt" },
+                { id: 20, name: "Huawei P60 Pro", price: "TZS 2,700,000", category: "Smartphones", description: "XMAGE camera, Kunlun glass, 100W wireless charging", badge: "Premium", icon: "fas fa-mobile-alt" }
+            ],
+            
+            laptops: [
+                { id: 21, name: "MacBook Pro 16\" M3 Max", price: "TZS 8,500,000", category: "Laptops", description: "Apple M3 Max chip, 48GB RAM, 1TB SSD, Liquid Retina XDR", badge: "New", icon: "fas fa-laptop" },
+                { id: 22, name: "Dell XPS 15 9530", price: "TZS 6,200,000", category: "Laptops", description: "13th Gen Intel i9, RTX 4070, 32GB RAM, 4K OLED", badge: "Premium", icon: "fas fa-laptop" },
+                { id: 23, name: "HP Spectre x360 16", price: "TZS 5,800,000", category: "Laptops", description: "2-in-1 convertible, Intel i7, 16GB RAM, 4K touchscreen", badge: "Sale", icon: "fas fa-laptop" },
+                { id: 24, name: "Lenovo Yoga 9i", price: "TZS 5,500,000", category: "Laptops", description: "360° hinge, Bowers & Wilkins sound, Intel Evo platform", badge: "Popular", icon: "fas fa-laptop" },
+                { id: 25, name: "Asus ROG Zephyrus G14", price: "TZS 4,900,000", category: "Laptops", description: "RTX 4060, AMD Ryzen 9, 16GB RAM, 120Hz display", badge: "Gaming", icon: "fas fa-laptop" },
+                { id: 26, name: "Microsoft Surface Laptop 5", price: "TZS 4,500,000", category: "Laptops", description: "Intel i7, 16GB RAM, Touchscreen, Windows 11 Pro", badge: "Business", icon: "fas fa-laptop" },
+                { id: 27, name: "Acer Predator Helios 300", price: "TZS 4,200,000", category: "Laptops", description: "RTX 4070, Intel i7, 32GB RAM, 240Hz display", badge: "Gaming", icon: "fas fa-laptop" },
+                { id: 28, name: "MSI Stealth 14 Studio", price: "TZS 5,100,000", category: "Laptops", description: "RTX 4060, Intel i9, 32GB RAM, OLED display", badge: "Premium", icon: "fas fa-laptop" },
+                { id: 29, name: "MacBook Air 15\" M2", price: "TZS 4,800,000", category: "Laptops", description: "M2 chip, 16GB RAM, 512GB SSD, Liquid Retina", badge: "New", icon: "fas fa-laptop" },
+                { id: 30, name: "Lenovo ThinkPad X1 Carbon", price: "TZS 5,900,000", category: "Laptops", description: "Business laptop, Intel i7, 32GB RAM, 4G LTE", badge: "Business", icon: "fas fa-laptop" },
+                { id: 31, name: "HP Envy 16", price: "TZS 4,300,000", category: "Laptops", description: "Intel i7, RTX 4060, 32GB RAM, 120Hz display", badge: "Creative", icon: "fas fa-laptop" },
+                { id: 32, name: "Dell Alienware m18", price: "TZS 7,500,000", category: "Laptops", description: "RTX 4090, Intel i9, 64GB RAM, 18\" 480Hz display", badge: "Extreme", icon: "fas fa-laptop" },
+                { id: 33, name: "Asus ZenBook 14", price: "TZS 3,800,000", category: "Laptops", description: "OLED display, Intel i7, 16GB RAM, NumberPad", badge: "Ultrabook", icon: "fas fa-laptop" },
+                { id: 34, name: "Razer Blade 15", price: "TZS 6,500,000", category: "Laptops", description: "RTX 4070, Intel i7, 32GB RAM, 240Hz QHD", badge: "Gaming", icon: "fas fa-laptop" },
+                { id: 35, name: "Microsoft Surface Pro 9", price: "TZS 4,000,000", category: "Laptops", description: "2-in-1 tablet, Intel i7, 16GB RAM, 120Hz display", badge: "Convertible", icon: "fas fa-laptop" },
+                { id: 36, name: "Acer Swift 3", price: "TZS 2,500,000", category: "Laptops", description: "AMD Ryzen 7, 16GB RAM, 512GB SSD, 14\" IPS", badge: "Budget", icon: "fas fa-laptop" },
+                { id: 37, name: "HP Pavilion 15", price: "TZS 2,800,000", category: "Laptops", description: "Intel i5, 16GB RAM, 512GB SSD, Backlit keyboard", badge: "Student", icon: "fas fa-laptop" },
+                { id: 38, name: "Lenovo IdeaPad 5", price: "TZS 2,600,000", category: "Laptops", description: "AMD Ryzen 5, 8GB RAM, 256GB SSD, 15.6\" FHD", badge: "Value", icon: "fas fa-laptop" },
+                { id: 39, name: "Asus TUF Gaming A15", price: "TZS 3,500,000", category: "Laptops", description: "RTX 4050, AMD Ryzen 7, 16GB RAM, 144Hz display", badge: "Gaming", icon: "fas fa-laptop" },
+                { id: 40, name: "Dell Inspiron 16", price: "TZS 3,200,000", category: "Laptops", description: "Intel i7, 16GB RAM, 1TB SSD, 16\" 3K display", badge: "Family", icon: "fas fa-laptop" }
+            ],
+            
+            electronics: [
+                { id: 41, name: "Samsung 75\" QLED 4K TV", price: "TZS 4,500,000", category: "Electronics", description: "Quantum HDR, Smart TV, Object Tracking Sound", badge: "Premium", icon: "fas fa-tv" },
+                { id: 42, name: "Sony PlayStation 5", price: "TZS 1,800,000", category: "Electronics", description: "Disc version, DualSense controller, 825GB SSD", badge: "Hot", icon: "fas fa-gamepad" },
+                { id: 43, name: "Apple iPad Pro 12.9\"", price: "TZS 3,200,000", category: "Electronics", description: "M2 chip, Liquid Retina XDR, 5G capable", badge: "New", icon: "fas fa-tablet-alt" },
+                { id: 44, name: "Bose QuietComfort 45", price: "TZS 850,000", category: "Electronics", description: "Noise cancelling headphones, 24-hour battery", badge: "Premium", icon: "fas fa-headphones" },
+                { id: 45, name: "DJI Mavic 3 Pro", price: "TZS 12,500,000", category: "Electronics", description: "Triple camera, 46min flight time, 5.1K video", badge: "Pro", icon: "fas fa-drone" },
+                { id: 46, name: "Apple Watch Ultra 2", price: "TZS 2,300,000", category: "Electronics", description: "Titanium case, 36hr battery, Depth gauge", badge: "New", icon: "fas fa-clock" },
+                { id: 47, name: "Samsung Galaxy Tab S9", price: "TZS 2,800,000", category: "Electronics", description: "S Pen included, 120Hz AMOLED, Snapdragon 8 Gen 2", badge: "Premium", icon: "fas fa-tablet-alt" },
+                { id: 48, name: "Xbox Series X", price: "TZS 1,700,000", category: "Electronics", description: "1TB SSD, 4K gaming, Game Pass included", badge: "Gaming", icon: "fas fa-gamepad" },
+                { id: 49, name: "Sony WH-1000XM5", price: "TZS 950,000", category: "Electronics", description: "Industry-leading noise cancellation, 30hr battery", badge: "Best", icon: "fas fa-headphones" },
+                { id: 50, name: "GoPro Hero 12", price: "TZS 1,200,000", category: "Electronics", description: "5.3K video, HyperSmooth 6.0, 10m waterproof", badge: "Action", icon: "fas fa-camera" },
+                { id: 51, name: "Nintendo Switch OLED", price: "TZS 1,100,000", category: "Electronics", description: "7\" OLED screen, 64GB storage, Dock included", badge: "Family", icon: "fas fa-gamepad" },
+                { id: 52, name: "LG 65\" OLED C3", price: "TZS 5,200,000", category: "Electronics", description: "4K 120Hz, α9 Gen6 processor, Dolby Vision", badge: "Premium", icon: "fas fa-tv" },
+                { id: 53, name: "Apple AirPods Pro 2", price: "TZS 650,000", category: "Electronics", description: "Adaptive Audio, H2 chip, MagSafe charging", badge: "New", icon: "fas fa-headphones" },
+                { id: 54, name: "Samsung Soundbar Q990C", price: "TZS 1,800,000", category: "Electronics", description: "11.1.4ch, Wireless Dolby Atmos, SpaceFit Sound", badge: "Premium", icon: "fas fa-volume-up" },
+                { id: 55, name: "Canon EOS R6 Mark II", price: "TZS 8,500,000", category: "Electronics", description: "24MP full-frame, 40fps shooting, 6K RAW", badge: "Pro", icon: "fas fa-camera" },
+                { id: 56, name: "Microsoft Surface Studio 2+", price: "TZS 15,000,000", category: "Electronics", description: "28\" touchscreen, Intel i7, RTX 4060, 32GB RAM", badge: "Creative", icon: "fas fa-desktop" },
+                { id: 57, name: "Meta Quest 3", price: "TZS 1,400,000", category: "Electronics", description: "Mixed reality, Snapdragon XR2 Gen 2, 128GB", badge: "VR", icon: "fas fa-vr-cardboard" },
+                { id: 58, name: "Sonos Era 300", price: "TZS 1,100,000", category: "Electronics", description: "Spatial audio, WiFi/Bluetooth, Voice control", badge: "Audio", icon: "fas fa-music" },
+                { id: 59, name: "Garmin Fenix 7X", price: "TZS 2,100,000", category: "Electronics", description: "Solar charging, Multi-band GNSS, 32GB storage", badge: "Sports", icon: "fas fa-watch" },
+                { id: 60, name: "Razer Blade 18", price: "TZS 9,500,000", category: "Electronics", description: "18\" 4K 240Hz, RTX 4090, Intel i9, 64GB RAM", badge: "Extreme", icon: "fas fa-laptop" }
+            ],
+            
+            fashion: [
+                { id: 61, name: "Gucci GG Marmont Bag", price: "TZS 3,500,000", category: "Fashion", description: "Matelassé leather, Double G hardware, Chain strap", badge: "Luxury", icon: "fas fa-bag-shopping" },
+                { id: 62, name: "Louis Vuitton Neverfull", price: "TZS 4,200,000", category: "Fashion", description: "Monogram canvas, Leather trim, Pouch included", badge: "Classic", icon: "fas fa-bag-shopping" },
+                { id: 63, name: "Nike Air Jordan 1", price: "TZS 450,000", category: "Fashion", description: "High-top, Leather upper, Original colorway", badge: "Iconic", icon: "fas fa-shoe-prints" },
+                { id: 64, name: "Adidas Yeezy Boost 350", price: "TZS 550,000", category: "Fashion", description: "Primeknit upper, Boost midsole, TPR outsole", badge: "Trending", icon: "fas fa-shoe-prints" },
+                { id: 65, name: "Rolex Submariner", price: "TZS 25,000,000", category: "Fashion", description: "41mm, Oystersteel, Ceramic bezel, 300m waterproof", badge: "Luxury", icon: "fas fa-clock" },
+                { id: 66, name: "Prada Sunglasses", price: "TZS 850,000", category: "Fashion", description: "Polarized lenses, Metal frame, Logo temples", badge: "Designer", icon: "fas fa-glasses" },
+                { id: 67, name: "Versace Medusa T-Shirt", price: "TZS 650,000", category: "Fashion", description: "100% cotton, Silk screen print, Regular fit", badge: "Designer", icon: "fas fa-tshirt" },
+                { id: 68, name: "Burberry Trench Coat", price: "TZS 3,800,000", category: "Fashion", description: "Gabardine cotton, Check lining, Waterproof", badge: "Classic", icon: "fas fa-vest" },
+                { id: 69, name: "Chanel Classic Flap Bag", price: "TZS 8,500,000", category: "Fashion", description: "Quilted caviar leather, Chain strap, CC lock", badge: "Iconic", icon: "fas fa-bag-shopping" },
+                { id: 70, name: "Dior Saddle Bag", price: "TZS 4,500,000", category: "Fashion", description: "Cannage leather, Oblique pattern, Adjustable strap", badge: "Trending", icon: "fas fa-bag-shopping" },
+                { id: 71, name: "Hermès Silk Scarf", price: "TZS 1,200,000", category: "Fashion", description: "90x90cm, 100% silk, Hand-rolled edges", badge: "Luxury", icon: "fas fa-scarf" },
+                { id: 72, name: "Balenciaga Triple S", price: "TZS 850,000", category: "Fashion", description: "Chunky sole, Leather upper, Distressed look", badge: "Trending", icon: "fas fa-shoe-prints" },
+                { id: 73, name: "Moncler Maya Jacket", price: "TZS 3,200,000", category: "Fashion", description: "Goose down, Nylon shell, Fur-trimmed hood", badge: "Winter", icon: "fas fa-vest" },
+                { id: 74, name: "Cartier Love Bracelet", price: "TZS 6,500,000", category: "Fashion", description: "18K yellow gold, Screw motif, 6.5\" length", badge: "Luxury", icon: "fas fa-gem" },
+                { id: 75, name: "Saint Laurent Boots", price: "TZS 1,800,000", category: "Fashion", description: "Leather upper, 3\" heel, Pointed toe", badge: "Designer", icon: "fas fa-boot" },
+                { id: 76, name: "Fendi Baguette", price: "TZS 3,600,000", category: "Fashion", description: "FF logo, Leather strap, Magnetic closure", badge: "Iconic", icon: "fas fa-bag-shopping" },
+                { id: 77, name: "Off-White Hoodie", price: "TZS 550,000", category: "Fashion", description: "Cotton fleece, Screen print, Drawcord hood", badge: "Streetwear", icon: "fas fa-tshirt" },
+                { id: 78, name: "Valentino Rockstud", price: "TZS 2,100,000", category: "Fashion", description: "Leather upper, Stud detailing, 4\" heel", badge: "Designer", icon: "fas fa-shoe-prints" },
+                { id: 79, name: "Bottega Veneta Pouch", price: "TZS 3,800,000", category: "Fashion", description: "Intrecciato leather, Metal clasp, Shoulder strap", badge: "Luxury", icon: "fas fa-bag-shopping" },
+                { id: 80, name: "Alexander McQueen Sneakers", price: "TZS 750,000", category: "Fashion", description: "Leather upper, Oversized sole, Platform", badge: "Designer", icon: "fas fa-shoe-prints" }
+            ],
+            
+            watches: [
+                { id: 81, name: "Rolex Daytona", price: "TZS 35,000,000", category: "Watches", description: "Chronograph, Ceramic bezel, Oyster case, 40mm", badge: "Iconic", icon: "fas fa-clock" },
+                { id: 82, name: "Audemars Piguet Royal Oak", price: "TZS 45,000,000", category: "Watches", description: "Stainless steel, Tapisserie dial, 41mm", badge: "Luxury", icon: "fas fa-clock" },
+                { id: 83, name: "Patek Philippe Nautilus", price: "TZS 60,000,000", category: "Watches", description: "Stainless steel, Blue dial, 40mm", badge: "Grail", icon: "fas fa-clock" },
+                { id: 84, name: "Omega Speedmaster", price: "TZS 12,500,000", category: "Watches", description: "Moonwatch, Hesalite crystal, 42mm", badge: "Legend", icon: "fas fa-clock" },
+                { id: 85, name: "Cartier Santos", price: "TZS 9,800,000", category: "Watches", description: "Square case, Blue sword hands, 35mm", badge: "Classic", icon: "fas fa-clock" },
+                { id: 86, name: "Tag Heuer Carrera", price: "TZS 6,500,000", category: "Watches", description: "Chronograph, Sapphire crystal, 42mm", badge: "Sports", icon: "fas fa-clock" },
+                { id: 87, name: "Breitling Navitimer", price: "TZS 8,200,000", category: "Watches", description: "Slide rule bezel, 41mm, Chronometer", badge: "Aviation", icon: "fas fa-clock" },
+                { id: 88, name: "IWC Portugieser", price: "TZS 11,000,000", category: "Watches", description: "Automatic, Arabic numerals, 42mm", badge: "Classic", icon: "fas fa-clock" },
+                { id: 89, name: "Hublot Big Bang", price: "TZS 15,000,000", category: "Watches", description: "Ceramic case, Skeleton dial, 45mm", badge: "Modern", icon: "fas fa-clock" },
+                { id: 90, name: "Jaeger-LeCoultre Reverso", price: "TZS 13,500,000", category: "Watches", description: "Reversible case, Art Deco, 28mm", badge: "Art", icon: "fas fa-clock" },
+                { id: 91, name: "Richard Mille RM 011", price: "TZS 85,000,000", category: "Watches", description: "Tourbillon, Skeleton, Carbon case", badge: "Extreme", icon: "fas fa-clock" },
+                { id: 92, name: "Panerai Luminor", price: "TZS 9,000,000", category: "Watches", description: "Crown guard, 44mm, Sandwich dial", badge: "Diving", icon: "fas fa-clock" },
+                { id: 93, name: "Vacheron Constantin Overseas", price: "TZS 28,000,000", category: "Watches", description: "Stainless steel, Blue dial, 41mm", badge: "Luxury", icon: "fas fa-clock" },
+                { id: 94, name: "Breguet Classique", price: "TZS 16,000,000", category: "Watches", description: "Guilloché dial, Blue hands, 40mm", badge: "Elegant", icon: "fas fa-clock" },
+                { id: 95, name: "Zenith El Primero", price: "TZS 7,500,000", category: "Watches", description: "36,000 vph, Chronograph, 42mm", badge: "Historic", icon: "fas fa-clock" },
+                { id: 96, name: "Tudor Black Bay", price: "TZS 4,500,000", category: "Watches", description: "Diver, Snowflake hands, 41mm", badge: "Heritage", icon: "fas fa-clock" },
+                { id: 97, name: "Grand Seiko Spring Drive", price: "TZS 8,800,000", category: "Watches", description: "Sweep seconds, Zaratsu polish, 40mm", badge: "Japanese", icon: "fas fa-clock" },
+                { id: 98, name: "Longines Master Collection", price: "TZS 3,200,000", category: "Watches", description: "Moonphase, Automatic, 40mm", badge: "Classic", icon: "fas fa-clock" },
+                { id: 99, name: "Bell & Ross BR 03", price: "TZS 5,500,000", category: "Watches", description: "Square case, Aviation inspired, 42mm", badge: "Tool", icon: "fas fa-clock" },
+                { id: 100, name: "Nomos Glashütte Tangente", price: "TZS 4,800,000", category: "Watches", description: "Bauhaus design, Manual wind, 35mm", badge: "German", icon: "fas fa-clock" }
+            ],
+            
+            shoes: [
+                { id: 101, name: "Nike Air Force 1", price: "TZS 380,000", category: "Shoes", description: "Leather upper, Perforated toe box, Air cushioning", badge: "Classic", icon: "fas fa-shoe-prints" },
+                { id: 102, name: "Adidas Superstar", price: "TZS 350,000", category: "Shoes", description: "Shell toe, Rubber shell, Leather upper", badge: "Iconic", icon: "fas fa-shoe-prints" },
+                { id: 103, name: "Converse Chuck Taylor", price: "TZS 280,000", category: "Shoes", description: "Canvas upper, Rubber toe cap, High-top", badge: "Vintage", icon: "fas fa-shoe-prints" },
+                { id: 104, name: "New Balance 990v6", price: "TZS 450,000", category: "Shoes", description: "Made in USA, FuelCell midsole, Pigskin suede", badge: "Premium", icon: "fas fa-shoe-prints" },
+                { id: 105, name: "Puma Suede Classic", price: "TZS 320,000", category: "Shoes", description: "Suede upper, Formstrip, Rubber outsole", badge: "Retro", icon: "fas fa-shoe-prints" },
+                { id: 106, name: "Reebok Classic Leather", price: "TZS 300,000", category: "Shoes", description: "Leather upper, EVA midsole, Rubber outsole", badge: "Heritage", icon: "fas fa-shoe-prints" },
+                { id: 107, name: "Vans Old Skool", price: "TZS 290,000", category: "Shoes", description: "Canvas upper, Sidestripe, Waffle outsole", badge: "Skate", icon: "fas fa-shoe-prints" },
+                { id: 108, name: "Asics Gel-Kayano 30", price: "TZS 520,000", category: "Shoes", description: "Running shoes, Gel cushioning, Stability", badge: "Running", icon: "fas fa-shoe-prints" },
+                { id: 109, name: "Hoka Clifton 9", price: "TZS 480,000", category: "Shoes", description: "Max cushioning, Meta-Rocker, Lightweight", badge: "Comfort", icon: "fas fa-shoe-prints" },
+                { id: 110, name: "Brooks Ghost 15", price: "TZS 460,000", category: "Shoes", description: "Neutral runner, DNA LOFT cushioning, 12mm drop", badge: "Running", icon: "fas fa-shoe-prints" },
+                { id: 111, name: "Salomon XT-6", price: "TZS 550,000", category: "Shoes", description: "Trail running, Quicklace system, Contagrip", badge: "Trail", icon: "fas fa-shoe-prints" },
+                { id: 112, name: "On Cloudmonster", price: "TZS 580,000", category: "Shoes", description: "CloudTec cushioning, Speedboard, Max cushion", badge: "Swiss", icon: "fas fa-shoe-prints" },
+                { id: 113, name: "Birkenstock Arizona", price: "TZS 420,000", category: "Shoes", description: "Two-strap sandal, Cork footbed, Leather", badge: "Comfort", icon: "fas fa-shoe-prints" },
+                { id: 114, name: "Crocs Classic Clog", price: "TZS 180,000", category: "Shoes", description: "Croslite material, Ventilation ports, Jibbitz", badge: "Casual", icon: "fas fa-shoe-prints" },
+                { id: 115, name: "Dr. Martens 1460", price: "TZS 450,000", category: "Shoes", description: "Smooth leather, Air-cushioned sole, 8-eyelet", badge: "Iconic", icon: "fas fa-shoe-prints" },
+                { id: 116, name: "Timberland 6-Inch Boot", price: "TZS 550,000", category: "Shoes", description: "Premium leather, Rubber lug outsole, Padded collar", badge: "Work", icon: "fas fa-shoe-prints" },
+                { id: 117, name: "UGG Classic Short", price: "TZS 520,000", category: "Shoes", description: "Sheepskin, Suede upper, Genuine wool", badge: "Winter", icon: "fas fa-shoe-prints" },
+                { id: 118, name: "Skechers Go Walk", price: "TZS 350,000", category: "Shoes", description: "Goga Mat insole, Lightweight, Machine washable", badge: "Comfort", icon: "fas fa-shoe-prints" },
+                { id: 119, name: "Fila Disruptor 2", price: "TZS 380,000", category: "Shoes", description: "Chunky sole, Leather upper, Retro style", badge: "Trendy", icon: "fas fa-shoe-prints" },
+                { id: 120, name: "Clarks Desert Boot", price: "TZS 420,000", category: "Shoes", description: "Suede upper, Crepe sole, Unlined", badge: "Classic", icon: "fas fa-shoe-prints" }
+            ]
+        };
+        
+        // Combine all products
+        productsDatabase.all = [
+            ...productsDatabase.smartphones,
+            ...productsDatabase.laptops,
+            ...productsDatabase.electronics,
+            ...productsDatabase.fashion,
+            ...productsDatabase.watches,
+            ...productsDatabase.shoes
+        ];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 500);
+            }, 1000);
+            
+            // Load initial products
+            filterProducts('all');
+        });
+        
+        // Filter products by category
+        function filterProducts(category) {
+            // Update active button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Get products
+            const products = category === 'all' ? productsDatabase.all : productsDatabase[category];
+            const container = document.getElementById('productsContainer');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Add products
+            products.forEach(product => {
+                container.innerHTML += createProductCard(product);
+            });
+            
+            // Update title
+            updateSectionTitle(category);
+        }
+        
+        // Create product card HTML
+        function createProductCard(product) {
+            return `
+                <div class="product-card">
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <div class="product-image-container">
+                        <div class="product-image-placeholder">
+                            <i class="${product.icon} product-icon"></i>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-category">${product.category}</span>
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">
+                            <i class="fas fa-tag"></i> ${product.price}
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-buy" onclick="buyProduct('${product.name}', '${product.price}')">
+                                <i class="fab fa-whatsapp"></i> Buy Now
+                            </button>
+                            <button class="btn-view" onclick="viewProduct(${product.id})">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Update section title
+        function updateSectionTitle(category) {
+            const titles = {
+                'all': 'All Premium Products',
+                'smartphones': 'Premium Smartphones',
+                'laptops': 'Laptops & Computers',
+                'electronics': 'Electronics & Gadgets',
+                'fashion': 'Luxury Fashion',
+                'watches': 'Premium Watches',
+                'shoes': 'Footwear Collection'
+            };
+            
+            document.querySelector('.section-title').textContent = titles[category] || 'Our Collection';
+        }
+        
+        // Buy product via WhatsApp
+        function buyProduct(productName, productPrice) {
+            const message = `Hello SK ROYAL COMPANY!%0A%0AI would like to order:%0AProduct: ${encodeURIComponent(productName)}%0APrice: ${encodeURIComponent(productPrice)}%0A%0APlease send me payment details and delivery information.`;
+            window.open(`https://wa.me/255673995536?text=${message}`, '_blank');
+        }
+        
+        // View product details
+        function viewProduct(productId) {
+            // Find product
+            let product = null;
+            for (const category in productsDatabase) {
+                const found = productsDatabase[category].find(p => p.id === productId);
+                if (found) {
+                    product = found;
+                    break;
+                }
+            }
+            
+            if (!product) return;
+            
+            // Show modal
+            const modal = document.getElementById('productModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div style="padding: 40px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: white; font-size: 3rem;">
+                            <i class="${product.icon}"></i>
+                        </div>
+                        <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;">${product.name}</h2>
+                        <p style="color: var(--accent); font-weight: 600; font-size: 1.2rem;">${product.category}</p>
+                    </div>
+                    
+                    <div style="background: var(--light); padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                        <h3 style="color: var(--dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle"></i> Product Description
+                        </h3>
+                        <p style="color: #555; line-height: 1.8;">${product.description}</p>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(90deg, #f8f9fa, #e9ecef); border-radius: 10px;">
+                        <div>
+                            <div style="font-size: 2.5rem; color: var(--secondary); font-weight: 800;">${product.price}</div>
+                            <div style="color: #666; font-size: 0.9rem;">Inclusive of VAT</div>
+                        </div>
+                        ${product.badge ? `<div style="background: var(--secondary); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 700;">${product.badge}</div>` : ''}
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <button onclick="buyProduct('${product.name}', '${product.price}')" style="flex: 2; background: linear-gradient(90deg, #25D366, #128C7E); color: white; border: none; padding: 18px; border-radius: 10px; font-weight: 700; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </button>
+                        <button onclick="closeModal()" style="flex: 1; background: var(--light); color: var(--dark); border: 2px solid #ddd; padding: 18px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('productModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>
